@@ -5,7 +5,7 @@ on:
   push:
   workflow_dispatch:
   schedule:
-  - cron: '9 * * * *'
+  - cron: '9 5 1,7,14,21 * *'
 env:
   username: ${{ github.actor }}
   show_icons: 'true'
@@ -20,11 +20,11 @@ jobs:
       uses: actions/checkout@v4
     - name: Fetch latest stats data
       run: |-
-        curl "${api_host}/api?username=${env.username}&show_icons=${env.show_icons}&hide_border=true&&count_private=true&include_all_commits=true&theme=${env.theme}" \
+        curl "${env.api_host}/api?username=${env.username}&show_icons=${env.show_icons}&hide_border=true&&count_private=true&include_all_commits=true&theme=${env.theme}" \
           -X GET -o gh-stats.svg
     - name: Fetch latest stats data
       run: |-
-        curl "${api_host}/api/top-langs/?username=${env.username}&show_icons=${env.show_icons}&hide_border=true&layout=compact&langs_count=120&theme=${env.theme}&hide=${env.language_hidden}" \
+        curl "${env.api_host}/api/top-langs/?username=${env.username}&show_icons=${env.show_icons}&hide_border=true&layout=compact&langs_count=120&theme=${env.theme}&hide=${env.language_hidden}" \
           -X GET -o gh-stats-language.svg
     - name: Commit and push if it changed
       run: |-
