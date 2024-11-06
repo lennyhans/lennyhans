@@ -7,7 +7,7 @@ on:
   schedule:
   - cron: '9 * * * *'
 env:
-  username: ${{GITHUB_ACTOR}}
+  username: ${{ github.actor }}
   show_icons: 'true'
   theme: 'tokyonight'
   language_hidden: 'hide%3Dphp,html,java,css,objective-c,tsql,shell,roff'
