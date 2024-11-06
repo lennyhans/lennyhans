@@ -21,11 +21,11 @@ jobs:
     - name: Fetch latest stats data
       run: |-
         curl "${api_host}/api?username=${username}&show_icons=${show_icons}&hide_border=true&&count_private=true&include_all_commits=true&theme=${theme}" \
-          -X GET --out > gh-stats.svg
+          -X GET -o gh-stats.svg
     - name: Fetch latest stats data
       run: |-
         curl "${api_host}/api/top-langs/?username=${username}&show_icons=${show_icons}&hide_border=true&layout=compact&langs_count=120&theme=${theme}&hide=${language_hidden}" \
-          -X GET --out > gh-stats-language.svg
+          -X GET -o gh-stats-language.svg
     - name: Commit and push if it changed
       run: |-
         git config user.name "Automated"
