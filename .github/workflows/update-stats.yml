@@ -1,0 +1,36 @@
+# Thanks to Simon for it https://simonwillison.net/2020/Oct/9/git-scraping/
+name: Update githubs stats
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+  - cron: '9 * * * *'
+env:
+  username: $GITHUB_ACTOR
+  show_icons: 'true'
+  theme: 'tokyonight'
+  language_hidden: 'hide%3Dphp,html,java,css,objective-c,tsql,shell,roff'
+  api_host: 'https://github-readme-stats.vercel.app'
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v4
+    - name: Fetch latest stats data
+      run: |-
+        curl "${api_host}/api?username=${username}&show_icons=${show_icons}&hide_border=true&&count_private=true&include_all_commits=true&theme=${theme}" \
+          -X GET --out > gh-stats.svg
+    - name: Fetch latest stats data
+      run: |-
+        curl "${api_host}/api/top-langs/?username=${username}&show_icons=${show_icons}&hide_border=true&layout=compact&langs_count=120&theme=${theme}&hide=${language_hidden}" \
+          -X GET --out > gh-stats-language.svg
+    - name: Commit and push if it changed
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com"
+        git add -A
+        timestamp=$(date -u)
+        git commit -m "Latest stats: ${timestamp}" || exit 0
+        git push
